@@ -40,7 +40,7 @@ class SegmentationModel(torch.nn.Module):
 
         if self.classification_head is not None:
             labels = self.classification_head(features[-1])
-            return masks_1,masks_2, labels
+            return labels, masks_1,masks_2
 
         return masks_1
 

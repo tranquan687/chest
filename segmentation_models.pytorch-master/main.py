@@ -214,7 +214,7 @@ val_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Se
 train_loader = DataLoader(train_data, batch_size=16, shuffle=True, num_workers=2)
 val_loader = DataLoader(val_data, batch_size=32, shuffle=True, num_workers=2)
 # Set up model
-model = Multitask_MobileV3Smal_LRASPP(MobileNetV3_Modified, SegHead, SegHead).to(device)
+model = model.to(device)
 
 # Set up loss function
 classification_loss_fn = nn.CrossEntropyLoss()
