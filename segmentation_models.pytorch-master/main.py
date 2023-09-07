@@ -345,7 +345,7 @@ for epoch in range(num_epochs):
     # save models
     if f1_score_classification_meter.avg > best_acc:
         print(f"Best model found at epoch {epoch+1}, saving model")
-        torch.save(model.state_dict(), "sample_best.ckpt") # only save best to prevent output memory exceed error
+        torch.save(model.state_dict(), "/kaggle/working/sample_best.ckpt") # only save best to prevent output memory exceed error
 #         torch.save(model,'best.pth')
         best_acc = f1_score_classification_meter.avg
         stale = 0
@@ -356,4 +356,4 @@ for epoch in range(num_epochs):
             break
     if epoch % save_every == 0 or epoch == num_epochs - 1:
         print(f"save model at epoch {epoch+1}, saving model")
-        torch.save(model.state_dict(), f"epoch_{epoch}.ckpt")
+        torch.save(model.state_dict(), f"/kaggle/working/epoch_{epoch}.ckpt")
