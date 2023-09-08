@@ -7,8 +7,8 @@ aux_params=dict(
     classes=3,                 # define number of output labels
 )
 model = smp.Unet(
-    encoder_name="inceptionv4",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
-    encoder_weights='imagenet',     # use `imagenet` pre-trained weights for encoder initialization
+    encoder_name="densenet121",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_weights=None,     # use `imagenet` pre-trained weights for encoder initialization
     in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
     classes=2,  
     aux_params=aux_params                    # model output channels (number of classes in your dataset)
@@ -202,7 +202,7 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import precision_score, recall_score, f1_score
 import torchvision
 learning_rate = 0.001
-num_epochs = 100
+num_epochs = 200
 
 # Set device
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
