@@ -1,7 +1,7 @@
 import timm
 import functools
 import torch.utils.model_zoo as model_zoo
-
+import torch
 from .resnet import resnet_encoders
 from .dpn import dpn_encoders
 from .vgg import vgg_encoders
@@ -82,7 +82,7 @@ def get_encoder(name, in_channels=3, depth=5, weights=None, output_stride=32, **
                     list(encoders[name]["pretrained_settings"].keys()),
                 )
             )
-        encoder.load_state_dict(model_zoo.load_url(settings["url"]))
+        encoder.load_state_dict(torch.hub.load_state_dict_from_url(settings["url"]))
 
     encoder.set_in_channels(in_channels, pretrained=weights is not None)
     if output_stride != 32:
