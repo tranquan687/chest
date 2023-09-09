@@ -7,7 +7,7 @@ aux_params=dict(
     classes=3,                 # define number of output labels
 )
 model = smp.Unet(
-    encoder_name="resnet50",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_name="inceptionv4",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights=None,     # use `imagenet` pre-trained weights for encoder initialization
     in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
     classes=2,  
@@ -262,7 +262,10 @@ for epoch in range(num_epochs):
         loss_segmentation_infected = segmentation_loss_fn(outputs_segmentation_infected, labels_segmentation_infected)
         loss_segmentation_lungs = segmentation_loss_fn(outputs_segmentation_lungs, labels_segmentation_lungs)
 #         loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
-        loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
+        a = 2
+        b = 5
+        c = 3
+        loss = ((a * loss_classification) + (b * loss_segmentation_infected) + (c * loss_segmentation_lungs))/(10)
 
 
         # Backward pass and optimization
