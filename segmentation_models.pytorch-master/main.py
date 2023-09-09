@@ -14,8 +14,11 @@ model = smp.Unet(
     aux_params=aux_params                    # model output channels (number of classes in your dataset)
 )
 
-
-print(model(torch.ones([1, 3, 256, 256]))[-1])
+a = 2
+b = 5
+c = 3
+print(a,b,c)
+# print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
 import imgaug.augmenters as iaa
@@ -262,9 +265,7 @@ for epoch in range(num_epochs):
         loss_segmentation_infected = segmentation_loss_fn(outputs_segmentation_infected, labels_segmentation_infected)
         loss_segmentation_lungs = segmentation_loss_fn(outputs_segmentation_lungs, labels_segmentation_lungs)
 #         loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
-        a = 2
-        b = 5
-        c = 3
+
         loss = ((a * loss_classification) + (b * loss_segmentation_infected) + (c * loss_segmentation_lungs))/(10)
 
 
