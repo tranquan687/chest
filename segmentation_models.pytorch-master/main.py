@@ -7,7 +7,7 @@ aux_params=dict(
     classes=3,                 # define number of output labels
 )
 model = smp.Unet(
-    encoder_name="inceptionv4",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_name="resnet50",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights=None,     # use `imagenet` pre-trained weights for encoder initialization
     in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
     classes=2,  
@@ -15,10 +15,9 @@ model = smp.Unet(
 )
 
 a = 2 #class
-b = 7 #infect
-c = 1
+b = 5 #infect
+c = 3
 print(a,b,c)
-
 # print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
