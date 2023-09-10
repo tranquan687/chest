@@ -14,7 +14,7 @@ model = smp.Unet(
     aux_params=aux_params                    # model output channels (number of classes in your dataset)
 )
 
-a = 0.2 #class, infect
+a = 0.5 #class, infect
 # print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
