@@ -14,10 +14,7 @@ model = smp.Unet(
     aux_params=aux_params                    # model output channels (number of classes in your dataset)
 )
 
-a = 2 #class
-b = 7 #infect
-c = 1
-print(a,b,c)
+a = 0.1 #class, infect
 # print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
@@ -266,7 +263,9 @@ for epoch in range(num_epochs):
         loss_segmentation_lungs = segmentation_loss_fn(outputs_segmentation_lungs, labels_segmentation_lungs)
 #         loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
 
-        loss = ((a * loss_classification) + (b * loss_segmentation_infected) + (c * loss_segmentation_lungs))/(10)
+        # loss = ((a * loss_classification) + (b * loss_segmentation_infected) + (c * loss_segmentation_lungs))/(10)
+        loss =  (loss_segmentation_infected) + (a*( loss_classification) + ( loss_segmentation_lungs))
+
 
 
         # Backward pass and optimization
