@@ -264,7 +264,7 @@ for epoch in range(num_epochs):
 #         loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
 
         # loss = ((a * loss_classification) + (b * loss_segmentation_infected) + (c * loss_segmentation_lungs))/(10)
-        loss =  (loss_segmentation_infected) + (a*( loss_classification) + ( loss_segmentation_lungs))
+        loss =  (loss_segmentation_infected) + (a*( loss_classification + loss_segmentation_lungs))
 
 
 
