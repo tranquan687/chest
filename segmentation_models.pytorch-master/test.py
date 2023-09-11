@@ -279,6 +279,8 @@ with torch.no_grad():
         recall_classification_meter.update(recall_classification,inputs.shape[0])
         f1_score_classification_meter.update(f1_score_classification,inputs.shape[0])
 
+    mem = '%.3gG' % (torch.cuda.memory_reserved() / 1E9 if torch.cuda.is_available() else 0)  # (GB)
+    print(mem)
 #             f1_score(y_true, y_pred, average='macro')
 # val_loss /= len(val_loader.dataset)
 # scheduler.step(val_loss)
