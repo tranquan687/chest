@@ -330,8 +330,8 @@ with torch.no_grad():
         
         outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
 
-        output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
-        output_seg_infected = (np.transpose(output_seg_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+        output_seg_lungs = (np.transpose(outputs_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+        output_seg_infected = (np.transpose(outputs_segmentation_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
 
         _,outputs_segmentation_lungs,outputs_segmentation_infected = post_processing(outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected)
 
