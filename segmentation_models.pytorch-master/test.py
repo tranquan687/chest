@@ -336,8 +336,12 @@ with torch.no_grad():
         _,outputs_segmentation_lungs,outputs_segmentation_infected = post_processing(outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected)
         outputs_segmentation_lungs = np.expand_dims(outputs_segmentation_lungs,axis=2)
         outputs_segmentation_infected = np.expand_dims(outputs_segmentation_infected,axis=2)
+        
+        import matplotlib.pyplot as plt
 
         print(np.unique(outputs_segmentation_lungs))
+        plt.imshow(outputs_segmentation_lungs,cmap='gray')
+
         outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
         # outputs_segmentation_infected = outputs_segmentation_infected.argmax(1)
         # outputs_segmentation_lungs = outputs_segmentation_lungs.argmax(1)
@@ -347,6 +351,7 @@ with torch.no_grad():
         labels_segmentation_lungs = (np.transpose(labels_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
         print(np.unique(labels_segmentation_lungs))
 
+        plt.imshow(labels_segmentation_lungs,cmap='gray')
         break
         
         
