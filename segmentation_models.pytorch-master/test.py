@@ -138,8 +138,8 @@ torch.cuda.empty_cache()
 gc.collect()
 
 def calculate_overlap_metrics(gt, pred,eps=1e-5):
-    output = pred.view(-1, ).float()
-    target = gt.view(-1, ).float()
+    output = pred.view(-1, )/255.
+    target = gt.view(-1, )/255.
     print('output',output)
     print('target',target)
 
