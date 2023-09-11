@@ -346,7 +346,7 @@ for epoch in range(num_epochs):
      precision_classification: {precision_classification_meter.avg :.4f}, recall_classification: {recall_classification_meter.avg :.4f},f1_score_classification: {f1_score_classification_meter.avg :.4f} \n')
 
     # save models
-    if f1_score_classification_meter.avg > best_acc:
+    if iou_infected_meter.avg > best_acc: # best base on infect
         print(f"Best model found at epoch {epoch+1}, saving model")
         torch.save(model.state_dict(), "/kaggle/working/sample_best.ckpt") # only save best to prevent output memory exceed error
 #         torch.save(model,'best.pth')
