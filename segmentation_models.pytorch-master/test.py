@@ -334,7 +334,7 @@ with torch.no_grad():
         outputs_segmentation_infected = (np.transpose(outputs_segmentation_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
         # print
         _,outputs_segmentation_lungs,outputs_segmentation_infected = post_processing(outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected)
-        print(outputs_segmentation_lungs.shape)
+        print(outputs_segmentation_lungs)
         outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
         # outputs_segmentation_infected = outputs_segmentation_infected.argmax(1)
         # outputs_segmentation_lungs = outputs_segmentation_lungs.argmax(1)
@@ -342,7 +342,9 @@ with torch.no_grad():
         labels_classification = labels_classification.argmax(1).detach().cpu().numpy()
         labels_segmentation_infected = (np.transpose(labels_segmentation_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
         labels_segmentation_lungs = (np.transpose(labels_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
-        print(labels_segmentation_lungs.shape)
+        print(labels_segmentation_lungs)
+
+        break
         
         
         pixel_acc_infected, dice_infected,iou_infected, precision_infected, recall_infected = calculate_overlap_metrics(torch.from_numpy(labels_segmentation_infected),torch.from_numpy(outputs_segmentation_infected),eps=1e-5)
