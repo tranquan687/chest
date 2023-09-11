@@ -288,7 +288,7 @@ for epoch in range(num_epochs):
             labels_segmentation_lungs = labels_segmentation_lungs.to(device)
             
             outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
-
+            
             
             outputs_classification = outputs_classification.type(torch.float32)
             outputs_segmentation_infected = outputs_segmentation_infected.type(torch.float32)
