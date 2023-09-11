@@ -354,11 +354,13 @@ with torch.no_grad():
 
         cv2.imwrite('labels_segmentation_lungs.jpg',labels_segmentation_lungs)
 
-        break
         
         
         pixel_acc_infected, dice_infected,iou_infected, precision_infected, recall_infected = calculate_overlap_metrics(torch.from_numpy(labels_segmentation_infected),torch.from_numpy(outputs_segmentation_infected),eps=1e-5)
         pixel_acc_lungs, dice_lungs,iou_lungs, precision_lungs, recall_lungs = calculate_overlap_metrics(torch.from_numpy(labels_segmentation_lungs),torch.from_numpy( outputs_segmentation_lungs),eps=1e-5)
+        print(dice_lungs,iou_lungs, precision_lungs, recall_lungs)
+        break
+        
         precision_classification = precision_score(labels_classification,outputs_classification,average='macro')
         recall_classification = recall_score(labels_classification,outputs_classification,average='macro')
         f1_score_classification = f1_score(labels_classification,outputs_classification,average='macro')
