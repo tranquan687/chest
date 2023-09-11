@@ -15,7 +15,7 @@ model = smp.Unet(
 )
 
 a = 0.1 #class, infect
-print('################### ', "inceptionv4")
+print('################### ', "inceptionv4",a)
 # print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
