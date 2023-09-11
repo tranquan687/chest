@@ -344,7 +344,7 @@ with torch.no_grad():
         labels_segmentation_lungs = (np.transpose(labels_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
         
         
-        pixel_acc_infected, dice_infected,iou_infected, precision_infected, recall_infected = calculate_overlap_metrics(labels_segmentation_infected, outputs_segmentation_infected,eps=1e-5)
+        pixel_acc_infected, dice_infected,iou_infected, precision_infected, recall_infected = calculate_overlap_metrics(torch.from_numpy(labels_segmentation_infected),torch.from_numpy(outputs_segmentation_infected,eps=1e-5))
         pixel_acc_lungs, dice_lungs,iou_lungs, precision_lungs, recall_lungs = calculate_overlap_metrics(labels_segmentation_lungs, outputs_segmentation_lungs,eps=1e-5)
         precision_classification = precision_score(labels_classification,outputs_classification,average='macro')
         recall_classification = recall_score(labels_classification,outputs_classification,average='macro')
