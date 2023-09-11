@@ -207,16 +207,15 @@ import time
 # num_epochs = 200
 
 # # Set device
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# print('device selected: ',device)
-# model = model.to(device)
-# model.load_state_dict(torch.load(r"D:\Downloads\epoch_199_inceptionv4.ckpt",map_location=device))
-# model.eval()
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print('device selected: ',device)
+model = model.to(device)
+model.load_state_dict(torch.load(r"/kaggle/input/weight/inceptionv4 multitask_01.ckpt",map_location=device))
+model.eval()
 
 # # Set up data loaders
 # train_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data')
-# test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data',mode='test' )
-test_data = Covid(r'D:\Quan\AIVN\chest\Infection Segmentation Data\Infection Segmentation Data',mode='test' )
+test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data',mode='test' )
 
 # print(x[0][1].shape)
 #     t.append(time.time()-t1)
