@@ -16,10 +16,8 @@ model = smp.Unet(
 )
 
 
-# print(a,b,c)
-print('a')
-# print(model(torch.ones([1, 3, 256, 256]))[-1])
-#data loader r
+import warnings
+
 import numpy as np
 # import imgaug.augmenters as iaa
 import torch
@@ -209,24 +207,16 @@ import time
 # num_epochs = 200
 
 # # Set device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print('device selected: ',device)
-model = model.to(device)
-model.load_state_dict(torch.load(r"D:\Downloads\epoch_199_inceptionv4.ckpt",map_location=device))
-model.eval()
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# print('device selected: ',device)
+# model = model.to(device)
+# model.load_state_dict(torch.load(r"D:\Downloads\epoch_199_inceptionv4.ckpt",map_location=device))
+# model.eval()
 
 # # Set up data loaders
 # train_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data')
 # test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data',mode='test' )
 test_data = Covid(r'D:\Quan\AIVN\chest\Infection Segmentation Data\Infection Segmentation Data',mode='test' )
-
-x = torch.rand(1, 3, 256, 256) 
-# # t =[]
-# # for i in range(101):
-# #     t1 = time.time()
-with torch.no_grad():
-    outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(x)
-    print(outputs_segmentation_lungs.shape)
 
 # print(x[0][1].shape)
 #     t.append(time.time()-t1)
@@ -234,108 +224,37 @@ with torch.no_grad():
 # print(np.mean(t[1:]))
 # train_loader = DataLoader(train_data, batch_size=16, shuffle=True, num_workers=2)
 val_loader = DataLoader(test_data, batch_size=2, shuffle=True, num_workers=2)
-# # Set up model
-
-# # Set up loss function
-# classification_loss_fn = nn.CrossEntropyLoss()
-# # segmentation_loss_fn = torchvision.ops.sigmoid_focal_loss
-# segmentation_loss_fn = nn.CrossEntropyLoss()
-# optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-5)
-
-# scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min')
-
-# # Set up optimizer
-# patience = 300
-# best_acc = 0
-# save_every = 5
-# # Set up training loop
-def noise_remove(im):
-    kernel = np.ones((5, 5), np.uint8)
-    im_re = cv2.morphologyEx(im, cv2.MORPH_CLOSE, kernel) 
-    contours, hierarchy = cv2.findContours(im_re, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-# calculate points for each contour
-
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        if area <10:
-            cv2.fillPoly(im_re, pts =[cnt], color=(0))
-    return im_re
 
 
-def post_processing(outputs_classification, output_lungs, output_infected):
-    class_revert_cvt = { 0:'Normal',1: 'COVID-19',2:'Non-COVID'}
-    
-    if outputs_classification.tolist()[0] == 1:
-        output_infected = noise_remove(output_infected)
-        output_lungs = noise_remove(output_lungs)
-        illustrate_im = cv2.cvtColor(output_lungs.copy(),cv2.COLOR_GRAY2RGB)
-        output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
-        infected_ratio = 100*np.count_nonzero(output_infected)/(np.count_nonzero(output_lungs)+1e-5)
-        outputs_classification = class_revert_cvt[outputs_classification.tolist()[0]]
-        
-        contours, hierarchy = cv2.findContours(output_infected, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(illustrate_im, contours, -1, (0, 255, 0), 1)
-        illustrate_im = cv2.putText(illustrate_im, f'Infected ratio: {infected_ratio:.4f}%',(5, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
-        illustrate_im = cv2.putText(illustrate_im, f'Predicted: {outputs_classification}',(5, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
-        
-        return outputs_classification, output_lungs, output_infected, infected_ratio, illustrate_im
-    else:
-        output_infected = np.zeros_like(output_infected) 
-        output_lungs = noise_remove(output_lungs)
-        illustrate_im = cv2.cvtColor(output_lungs.copy(),cv2.COLOR_GRAY2RGB)
-        outputs_classification = class_revert_cvt[outputs_classification.tolist()[0]]
-        illustrate_im = cv2.putText(illustrate_im, f'Infected ratio: 0%',(5, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
-        illustrate_im = cv2.putText(illustrate_im, f'Predicted: {outputs_classification}',(5, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
-        return outputs_classification, output_lungs, output_infected, 0, illustrate_im
+
     
 
 with torch.no_grad():
-    # for i in tqdm(range(len(test_data))):
-    #     input, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected = test_data[i]
-    #     inputs = input.unsqueeze(0)
-    #     labels_classification = labels_classification.unsqueeze(0)
-    #     labels_segmentation_lungs = labels_segmentation_lungs.unsqueeze(0)
-    #     labels_segmentation_infected =labels_segmentation_infected.unsqueeze(0)
+    for i in tqdm(range(len(test_data))):
+        input, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected = test_data[i]
+        inputs = input.unsqueeze(0)
+        labels_classification = labels_classification.unsqueeze(0)
+        labels_segmentation_lungs = labels_segmentation_lungs.unsqueeze(0)
+        labels_segmentation_infected =labels_segmentation_infected.unsqueeze(0)
         # inputs = input.unsqueeze(0)
 
-    for batch_idx, (inputs, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected) in enumerate(val_loader):
-        # To device
-        print('ss')
-        inputs = inputs.to(device)
+    # for batch_idx, (inputs, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected) in enumerate(val_loader):
+    #     # To device
+    #     print('ss')
+        # inputs = inputs.to(device)
         labels_classification = labels_classification.to(device)
         labels_segmentation_infected = labels_segmentation_infected.to(device)
         labels_segmentation_lungs = labels_segmentation_lungs.to(device)
         
         outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
-        print('aa')
-        
-        outputs_classification = outputs_classification.type(torch.float32)
-        outputs_segmentation_infected = outputs_segmentation_infected.type(torch.float32)
-        outputs_segmentation_lungs = outputs_segmentation_lungs.type(torch.float32)
-        
-        labels_classification = labels_classification.type(torch.float32)
-        labels_segmentation_infected = labels_segmentation_infected.type(torch.float32)
-        labels_segmentation_lungs = labels_segmentation_lungs.type(torch.float32)
-        
-# #             print(outputs_classification ,labels_classification)
-        
-#         loss_classification = classification_loss_fn(outputs_classification, labels_classification)
-#         loss_segmentation_infected = segmentation_loss_fn(outputs_segmentation_infected, labels_segmentation_infected)
-#         loss_segmentation_lungs = segmentation_loss_fn(outputs_segmentation_lungs, labels_segmentation_lungs)
-# #         loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
-#         loss = (1/3 * loss_classification) + (1/3 * loss_segmentation_infected) + (1/3 * loss_segmentation_lungs)
-#         val_loss += loss.item() * inputs.size(0)
 
         outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
         outputs_segmentation_infected = outputs_segmentation_infected.argmax(1)
         outputs_segmentation_lungs = outputs_segmentation_lungs.argmax(1)
-        print(outputs_segmentation_infected.shape)
+
         labels_classification = labels_classification.argmax(1).detach().cpu().numpy()
         labels_segmentation_infected = labels_segmentation_infected.argmax(1)
         labels_segmentation_lungs = labels_segmentation_lungs.argmax(1)
-        print(labels_segmentation_infected.shape)
-        
-
         
         
         pixel_acc_infected, dice_infected,iou_infected, precision_infected, recall_infected = calculate_overlap_metrics(labels_segmentation_infected, outputs_segmentation_infected,eps=1e-5)
@@ -368,22 +287,88 @@ print(f'pixel_acc_infected: {pixel_acc_infected_meter.avg :.4f}, dice_infected: 
 pixel_acc_lungs: {pixel_acc_lungs_meter.avg :.4f}, dice_lungs: {dice_lungs_meter.avg :.4f},iou_lungs: {iou_lungs_meter.avg :.4f}, precision_lungs: {precision_lungs_meter.avg :.4f}, recall_lungs: {recall_lungs_meter.avg :.4f} \n\
     precision_classification: {precision_classification_meter.avg :.4f}, recall_classification: {recall_classification_meter.avg :.4f},f1_score_classification: {f1_score_classification_meter.avg :.4f} \n')
 
+
+
 print('after postprocess')
+def noise_remove(im):
+    kernel = np.ones((5, 5), np.uint8)
+    im_re = cv2.morphologyEx(im, cv2.MORPH_CLOSE, kernel) 
+    contours, hierarchy = cv2.findContours(im_re, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+# calculate points for each contour
+
+    for cnt in contours:
+        area = cv2.contourArea(cnt)
+        if area <10:
+            cv2.fillPoly(im_re, pts =[cnt], color=(0))
+    return im_re
 
 
+def post_processing(outputs_classification, output_lungs, output_infected):
+    output_infected = noise_remove(output_infected)
+    output_lungs = noise_remove(output_lungs)
+    output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
+            
+    return outputs_classification, output_lungs, output_infected
 
-#     # save models
-#     if f1_score_classification_meter.avg > best_acc:
-#         print(f"Best model found at epoch {epoch+1}, saving model")
-#         torch.save(model.state_dict(), "/kaggle/working/sample_best.ckpt") # only save best to prevent output memory exceed error
-# #         torch.save(model,'best.pth')
-#         best_acc = f1_score_classification_meter.avg
-#         stale = 0
-#     else:
-#         stale += 1
-#         if stale > patience:
-#             print(f"No improvment {patience} consecutive epochs, early stopping")
-#             break
-#     if epoch % save_every == 0 or epoch == num_epochs - 1:
-#         print(f"save model at epoch {epoch+1}, saving model")
-#         torch.save(model.state_dict(), f"/kaggle/working/epoch_{epoch}.ckpt")
+with torch.no_grad():
+    for i in tqdm(range(len(test_data))):
+        input, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected = test_data[i]
+        inputs = input.unsqueeze(0)
+        labels_classification = labels_classification.unsqueeze(0)
+        labels_segmentation_lungs = labels_segmentation_lungs.unsqueeze(0)
+        labels_segmentation_infected =labels_segmentation_infected.unsqueeze(0)
+        # inputs = input.unsqueeze(0)
+
+    # for batch_idx, (inputs, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected) in enumerate(val_loader):
+    #     # To device
+    #     print('ss')
+        # inputs = inputs.to(device)
+        labels_classification = labels_classification.to(device)
+        labels_segmentation_infected = labels_segmentation_infected.to(device)
+        labels_segmentation_lungs = labels_segmentation_lungs.to(device)
+        
+        outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
+
+        output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+        output_seg_infected = (np.transpose(output_seg_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+
+        _,outputs_segmentation_lungs,outputs_segmentation_infected = post_processing(outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected)
+
+        outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
+        # outputs_segmentation_infected = outputs_segmentation_infected.argmax(1)
+        # outputs_segmentation_lungs = outputs_segmentation_lungs.argmax(1)
+
+        labels_classification = labels_classification.argmax(1).detach().cpu().numpy()
+        labels_segmentation_infected = (np.transpose(labels_segmentation_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+        labels_segmentation_lungs = (np.transpose(labels_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+        
+        
+        pixel_acc_infected, dice_infected,iou_infected, precision_infected, recall_infected = calculate_overlap_metrics(labels_segmentation_infected, outputs_segmentation_infected,eps=1e-5)
+        pixel_acc_lungs, dice_lungs,iou_lungs, precision_lungs, recall_lungs = calculate_overlap_metrics(labels_segmentation_lungs, outputs_segmentation_lungs,eps=1e-5)
+        precision_classification = precision_score(labels_classification,outputs_classification,average='macro')
+        recall_classification = recall_score(labels_classification,outputs_classification,average='macro')
+        f1_score_classification = f1_score(labels_classification,outputs_classification,average='macro')
+        
+        pixel_acc_infected_meter.update(pixel_acc_infected,inputs.shape[0])
+        dice_infected_meter.update(dice_infected,inputs.shape[0])
+        iou_infected_meter.update(iou_infected,inputs.shape[0])
+        precision_infected_meter.update(precision_infected,inputs.shape[0])
+        recall_infected_meter.update(recall_infected,inputs.shape[0])
+
+        pixel_acc_lungs_meter.update(pixel_acc_lungs,inputs.shape[0])
+        dice_lungs_meter.update(dice_lungs,inputs.shape[0])
+        iou_lungs_meter.update(iou_lungs,inputs.shape[0])
+        precision_lungs_meter.update(precision_lungs,inputs.shape[0])
+        recall_lungs_meter.update(recall_lungs,inputs.shape[0])
+
+        precision_classification_meter.update(precision_classification,inputs.shape[0])
+        recall_classification_meter.update(recall_classification,inputs.shape[0])
+        f1_score_classification_meter.update(f1_score_classification,inputs.shape[0])
+
+#             f1_score(y_true, y_pred, average='macro')
+# val_loss /= len(val_loader.dataset)
+# scheduler.step(val_loss)
+# print(f'Epoch {epoch+1}/{num_epochs}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f} \n \
+print(f'pixel_acc_infected: {pixel_acc_infected_meter.avg :.4f}, dice_infected: {dice_infected_meter.avg :.4f},iou_infected: {iou_infected_meter.avg :.4f}, precision_infected: {precision_infected_meter.avg :.4f}, recall_infected: {recall_infected_meter.avg :.4f} \n \
+pixel_acc_lungs: {pixel_acc_lungs_meter.avg :.4f}, dice_lungs: {dice_lungs_meter.avg :.4f},iou_lungs: {iou_lungs_meter.avg :.4f}, precision_lungs: {precision_lungs_meter.avg :.4f}, recall_lungs: {recall_lungs_meter.avg :.4f} \n\
+    precision_classification: {precision_classification_meter.avg :.4f}, recall_classification: {recall_classification_meter.avg :.4f},f1_score_classification: {f1_score_classification_meter.avg :.4f} \n')

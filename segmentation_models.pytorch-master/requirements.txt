@@ -6,3 +6,4 @@ timm==0.9.7
 tqdm
 pillow
 six
+openvino-dev[pytorch,onnx]
