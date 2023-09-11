@@ -7,14 +7,14 @@ aux_params=dict(
     classes=3,                 # define number of output labels
 )
 model = smp.Unet(
-    encoder_name="resnet50",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_name="inceptionv4",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights=None,     # use `imagenet` pre-trained weights for encoder initialization
     in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
     classes=2,  
     aux_params=aux_params                    # model output channels (number of classes in your dataset)
 )
 
-a = 0.5 #class, infect
+a = 0 #class, infect
 # print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
@@ -346,7 +346,7 @@ for epoch in range(num_epochs):
      precision_classification: {precision_classification_meter.avg :.4f}, recall_classification: {recall_classification_meter.avg :.4f},f1_score_classification: {f1_score_classification_meter.avg :.4f} \n')
 
     # save models
-    if iou_infected_meter.avg > best_acc: # best base on infect
+    if iou_infected_meter.avg > best_acc: # best base on ind
         print(f"Best model found at epoch {epoch+1}, saving model")
         torch.save(model.state_dict(), "/kaggle/working/sample_best.ckpt") # only save best to prevent output memory exceed error
 #         torch.save(model,'best.pth')
