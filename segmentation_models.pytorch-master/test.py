@@ -232,7 +232,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('device selected: ',device)
 model = model.to(device)
-model.load_state_dict(torch.load(r"/kaggle/input/baseline-199/resnet50_199.ckpt",map_location=device))
+model.load_state_dict(torch.load(r"/kaggle/input/baseline/mbv3.ckpt",map_location=device))
 model.eval()
 
 # # Set up data loaders
@@ -270,13 +270,13 @@ with torch.no_grad():
         outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
         
         outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
-        print(outputs_classification)
+        # print(outputs_classification)
 
         outputs_segmentation_infected = outputs_segmentation_infected.argmax(1)
         outputs_segmentation_lungs = outputs_segmentation_lungs.argmax(1)
 
         labels_classification = labels_classification.argmax(1).detach().cpu().numpy()
-        print(labels_classification)
+        # print(labels_classification)
         labels_segmentation_infected = labels_segmentation_infected.argmax(1)
         labels_segmentation_lungs = labels_segmentation_lungs.argmax(1)
         
