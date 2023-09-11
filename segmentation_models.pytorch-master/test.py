@@ -228,7 +228,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('device selected: ',device)
 model = model.to(device)
-model.load_state_dict(torch.load(r"/kaggle/input/weight2/inceptionv4 multitask_02.ckpt",map_location=device))
+model.load_state_dict(torch.load(r"/kaggle/input/weight2/inceptionv4 multitask_01.ckpt",map_location=device))
 model.eval()
 
 # # Set up data loaders
@@ -357,9 +357,9 @@ with torch.no_grad():
 
         import matplotlib.pyplot as plt
 
-        print(np.unique(outputs_segmentation_lungs))
+        # print(np.unique(outputs_segmentation_lungs))
         # plt.imshow(outputs_segmentation_lungs,cmap='gray')
-        cv2.imwrite('outputs_segmentation_lungs.jpg',outputs_segmentation_lungs)
+        # cv2.imwrite('outputs_segmentation_lungs.jpg',outputs_segmentation_lungs)
 
         outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
         # outputs_segmentation_infected = outputs_segmentation_infected.argmax(1)
@@ -368,9 +368,9 @@ with torch.no_grad():
         labels_classification = labels_classification.argmax(1).detach().cpu().numpy()
         labels_segmentation_infected = (np.transpose(labels_segmentation_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
         labels_segmentation_lungs = (np.transpose(labels_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
-        print(np.unique(labels_segmentation_lungs))
+        # print(np.unique(labels_segmentation_lungs))
 
-        cv2.imwrite('labels_segmentation_lungs.jpg',labels_segmentation_lungs)
+        # cv2.imwrite('labels_segmentation_lungs.jpg',labels_segmentation_lungs)
 
         
         
