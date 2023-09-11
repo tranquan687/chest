@@ -314,7 +314,7 @@ def post_processing(outputs_classification, output_lungs, output_infected):
 with torch.no_grad():
     for i in tqdm(range(len(test_data))):
         input, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected = test_data[i]
-        inputs = input.unsqueeze(0)
+        inputs = input.unsqueeze(0).to(device)
         labels_classification = labels_classification.unsqueeze(0)
         labels_segmentation_lungs = labels_segmentation_lungs.unsqueeze(0)
         labels_segmentation_infected =labels_segmentation_infected.unsqueeze(0)
