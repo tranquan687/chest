@@ -14,8 +14,8 @@ model = smp.Unet(
     aux_params=aux_params                    # model output channels (number of classes in your dataset)
 )
 
-a = 0.1 #class, infect
-print('################### ', "inceptionv4")
+a = 0.2 #class, infect
+print('################### ', "inceptionv4",a)
 # print(model(torch.ones([1, 3, 256, 256]))[-1])
 #data loader r
 import numpy as np
