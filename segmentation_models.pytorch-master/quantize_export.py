@@ -227,7 +227,8 @@ import time
 # num_epochs = 200
 
 # # Set device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = 'cpu'
 print('device selected: ',device)
 # model = model.to(device)
 # model.load_state_dict(torch.load(r"D:\Downloads\epoch_199_inceptionv4.ckpt",map_location=device))
@@ -321,7 +322,7 @@ print_size_of_model(model_static_quantized)
 # export quantizated model
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
-# weights_path = '/kaggle/input/sample_best.ckpt'
+weights_path = '/kaggle/input/baseline/inceptionv4.ckpt'
 
 # Paths where ONNX and OpenVINO IR models will be stored.
 onnx_path = 'quantized_model_final.onnx'
@@ -329,10 +330,10 @@ onnx_path = 'quantized_model_final.onnx'
 
 # Load model for converting to ONNX 
 # model = Multitask_MobileV3Smal_LRASPP(MobileNetV3_Modified, SegHead, SegHead)
-# state_dict = torch.load(weights_path, map_location='cpu')
+state_dict = torch.load(weights_path, map_location='cpu')
 # load state dict to model
-# model.load_state_dict(state_dict)
-# model.eval()
+model.load_state_dict(state_dict)
+model.eval()
 # print("Loaded PyTorch model")
 
 
