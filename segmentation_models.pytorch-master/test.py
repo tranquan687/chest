@@ -237,7 +237,7 @@ model.eval()
 
 # # Set up data loaders
 # train_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data')
-test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data',mode='test' )
+test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data',mode='val' )
 
 # print(x[0][1].shape)
 #     t.append(time.time()-t1)
