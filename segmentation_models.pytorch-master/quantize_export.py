@@ -359,6 +359,32 @@ model_onnx = core.read_model(model=onnx_path)
 # Load model on device
 compiled_model_onnx = core.compile_model(model=model_onnx, device_name='CPU')
 #############################################
+
+def post_processing_inf(outputs_classification, output_lungs, output_infected):
+    class_revert_cvt = { 0:'Normal',1: 'COVID-19',2:'Non-COVID'}
+    
+    if outputs_classification.tolist()[0] == 1:
+        output_infected = noise_remove(output_infected)
+        output_lungs = noise_remove(output_lungs)
+        illustrate_im = cv2.cvtColor(output_lungs.copy(),cv2.COLOR_GRAY2RGB)
+        output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
+        infected_ratio = 100*np.count_nonzero(output_infected)/(np.count_nonzero(output_lungs)+1e-5)
+        outputs_classification = class_revert_cvt[outputs_classification.tolist()[0]]
+        
+        contours, hierarchy = cv2.findContours(output_infected, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(illustrate_im, contours, -1, (0, 255, 0), 1)
+        illustrate_im = cv2.putText(illustrate_im, f'Infected ratio: {infected_ratio:.4f}%',(5, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
+        illustrate_im = cv2.putText(illustrate_im, f'Predicted: {outputs_classification}',(5, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
+        
+        return outputs_classification, output_lungs, output_infected, infected_ratio, illustrate_im
+    else:
+        output_infected = np.zeros_like(output_infected) 
+        output_lungs = noise_remove(output_lungs)
+        illustrate_im = cv2.cvtColor(output_lungs.copy(),cv2.COLOR_GRAY2RGB)
+        outputs_classification = class_revert_cvt[outputs_classification.tolist()[0]]
+        illustrate_im = cv2.putText(illustrate_im, f'Infected ratio: 0%',(5, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
+        illustrate_im = cv2.putText(illustrate_im, f'Predicted: {outputs_classification}',(5, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
+        return outputs_classification, output_lungs, output_infected, 0, illustrate_im
 # # Run inference on the input image
 test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data', mode='test' )
 to_tensor = transforms.Compose([
@@ -385,7 +411,7 @@ for i in range(580, 590):
     output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1), (1, 2, 0))*255).astype('uint8')
     output_seg_infected = (np.transpose(output_seg_infected.argmax(1), (1, 2, 0))*255).astype('uint8')
       
-    _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing(output_class, output_seg_lungs, output_seg_infected)
+    _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
     
     fig.add_subplot(3, 3, 4)
     plt.imshow(output_seg_lungs,cmap='gray')
