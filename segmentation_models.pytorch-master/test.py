@@ -19,7 +19,7 @@ model = smp.Unet(
 #densenet121
 #inceptionv4
 #timm-mobilenetv3_small_100
-# print('05')
+print('05')
 import warnings
 
 import numpy as np
@@ -232,7 +232,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('device selected: ',device)
 model = model.to(device)
-model.load_state_dict(torch.load(r"/kaggle/input/baseline/inceptionv4.ckpt",map_location=device))
+model.load_state_dict(torch.load(r"/kaggle/input/inceptionv4/inceptionv4_00.ckpt",map_location=device))
 model.eval()
 
 # # Set up data loaders
@@ -392,12 +392,11 @@ def noise_remove(im):
 
 
 def post_processing(outputs_classification, output_lungs, output_infected):
-    if outputs_classification.tolist()[0] == 1:
-        output_infected = noise_remove(output_infected)
-        output_lungs = noise_remove(output_lungs)
-        output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
-    else:
-        output_infected = np.zeros_like(output_infected) 
+    
+    output_infected = noise_remove(output_infected)
+    output_lungs = noise_remove(output_lungs)
+    output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
+            
     return outputs_classification, output_lungs, output_infected
 
 with torch.no_grad():
