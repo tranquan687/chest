@@ -346,34 +346,53 @@ with warnings.catch_warnings():
     print(f"ONNX model exported to {onnx_path}.")
 
 #############################################
-# Export model to OpenVINO IR model format
-# Not necessary as this is slower than onnx run in OpenVINO Runtime
-
-# Construct the command for Model Optimizer.
-# from openvino.tools import mo
-# from openvino.runtime import serialize
-
-# if not ir_path.exists():
-#     print("Exporting ONNX model to IR... This may take a few minutes.")
-#     ov_model = mo.convert_model(onnx_path, compress_to_fp16=True)
-#     serialize(ov_model, ir_path)
-# else:
-#     print(f"IR model {ir_path} already exists.")
-
 
 #############################################
-# from openvino.runtime import Core
+from openvino.runtime import Core
 
-# print('evaluate')
-# # Instantiate OpenVINO Core
-# core = Core()
+print('evaluate')
+# Instantiate OpenVINO Core
+core = Core()
 
-# # Read model to OpenVINO Runtime
-# model_onnx = core.read_model(model=onnx_path)
-# # Load model on device
-# compiled_model_onnx = core.compile_model(model=model_onnx, device_name='CPU')
-
+# Read model to OpenVINO Runtime
+model_onnx = core.read_model(model=onnx_path)
+# Load model on device
+compiled_model_onnx = core.compile_model(model=model_onnx, device_name='CPU')
+#############################################
 # # Run inference on the input image
+test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data', mode='test' )
+to_tensor = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+    ])
+
+for i in range(580, 590):
+    image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
+    
+    fig = plt.figure(figsize=(20, 20))
+    fig.add_subplot(3, 3, 1)
+    plt.imshow(image.permute(1, 2, 0), cmap='gray')
+    fig.add_subplot(3, 3, 2)
+    plt.imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    fig.add_subplot(3, 3, 3)
+    plt.imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    
+    image = image.unsqueeze(0).to('cpu').numpy()
+    with torch.no_grad():
+        output_class, output_seg_lungs, output_seg_infected = compiled_model_onnx(image).values()
+
+    output_class = output_class.argmax(1)
+    output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1), (1, 2, 0))*255).astype('uint8')
+    output_seg_infected = (np.transpose(output_seg_infected.argmax(1), (1, 2, 0))*255).astype('uint8')
+      
+    _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing(output_class, output_seg_lungs, output_seg_infected)
+    
+    fig.add_subplot(3, 3, 4)
+    plt.imshow(output_seg_lungs,cmap='gray')
+    fig.add_subplot(3, 3, 5)
+    plt.imshow(output_seg_infected,cmap='gray')    
+    fig.add_subplot(3, 3, 6)
+    plt.imshow(illustrate_im,cmap='gray')
 # # res_onnx = compiled_model_onnx([normalized_input_image])[0]
 
 # #########
