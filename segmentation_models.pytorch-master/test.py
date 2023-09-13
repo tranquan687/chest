@@ -392,10 +392,12 @@ def noise_remove(im):
 
 
 def post_processing(outputs_classification, output_lungs, output_infected):
-    output_infected = noise_remove(output_infected)
-    output_lungs = noise_remove(output_lungs)
-    output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
-            
+    if outputs_classification.tolist()[0] == 1:
+        output_infected = noise_remove(output_infected)
+        output_lungs = noise_remove(output_lungs)
+        output_infected = cv2.bitwise_and(output_infected,output_lungs, mask = None)
+    else:
+        output_infected = np.zeros_like(output_infected) 
     return outputs_classification, output_lungs, output_infected
 
 with torch.no_grad():
