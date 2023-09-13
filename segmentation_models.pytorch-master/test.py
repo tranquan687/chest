@@ -232,7 +232,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('device selected: ',device)
 model = model.to(device)
-model.load_state_dict(torch.load(r"/kaggle/input/baseline/resnet50.ckpt",map_location=device))
+model.load_state_dict(torch.load(r"/kaggle/input/baseline/inceptionv4.ckpt",map_location=device))
 model.eval()
 
 # # Set up data loaders
