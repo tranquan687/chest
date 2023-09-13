@@ -342,7 +342,7 @@ with warnings.catch_warnings():
     input_names = [ "input_image" ]
     output_names = [ "class", "lung_output", 'infect_output' ]
 
-    torch.onnx.export(model_static_quantized , dummy_input, onnx_path, verbose=True, input_names=input_names, output_names=output_names)
+    torch.onnx.export(model, dummy_input, onnx_path, verbose=True, input_names=input_names, output_names=output_names)
     print(f"ONNX model exported to {onnx_path}.")
 
 #############################################
