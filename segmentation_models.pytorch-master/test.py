@@ -244,7 +244,7 @@ test_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection S
 
 # print(np.mean(t[1:]))
 # train_loader = DataLoader(train_data, batch_size=16, shuffle=True, num_workers=2)
-# val_loader = DataLoader(test_data, batch_size=32, shuffle=True, num_workers=2)
+val_loader = DataLoader(test_data, batch_size=32, shuffle=True, num_workers=2)
 
 
 # for batch_idx, (inputs, labels_classification,  labels_segmentation_lungs, labels_segmentation_infected) in enumerate(val_loader):
