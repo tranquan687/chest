@@ -8,7 +8,7 @@ aux_params=dict(
     classes=3,                 # define number of output labels
 )
 model = smp.Unet(
-    encoder_name="inceptionv4",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
+    encoder_name="densenet121",        # choose encoder, e.g. mobilenet_v2 or efficientnet-b7
     encoder_weights=None,     # use `imagenet` pre-trained weights for encoder initialization
     in_channels=3,                  # model input channels (1 for gray-scale images, 3 for RGB, etc.)
     classes=2,  
@@ -232,7 +232,7 @@ import time
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('device selected: ',device)
 model = model.to(device)
-model.load_state_dict(torch.load(r"/kaggle/input/baseline/inceptionv4.ckpt",map_location=device))
+model.load_state_dict(torch.load(r"/kaggle/input/baseline/densenet121.ckpt",map_location=device))
 model.eval()
 
 # # Set up data loaders
