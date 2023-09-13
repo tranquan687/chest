@@ -419,6 +419,7 @@ for i in range(580, 590):
     plt.imshow(output_seg_infected,cmap='gray')    
     fig.add_subplot(3, 3, 6)
     plt.imshow(illustrate_im,cmap='gray')
+    plt.savefig('asfsaf.png')
 # # res_onnx = compiled_model_onnx([normalized_input_image])[0]
 
 # #########
