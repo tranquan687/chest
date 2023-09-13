@@ -230,9 +230,20 @@ import time
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device = 'cpu'
 print('device selected: ',device)
-# model = model.to(device)
-# model.load_state_dict(torch.load(r"D:\Downloads\epoch_199_inceptionv4.ckpt",map_location=device))
-# model.eval()
+IMAGE_WIDTH = 256
+IMAGE_HEIGHT = 256
+weights_path = '/kaggle/input/baseline/inceptionv4.ckpt'
+
+# Paths where ONNX and OpenVINO IR models will be stored.
+onnx_path = 'quantized_model_final.onnx'
+# ir_path = 'model_final.xml'  
+
+# Load model for converting to ONNX 
+# model = Multitask_MobileV3Smal_LRASPP(MobileNetV3_Modified, SegHead, SegHead)
+state_dict = torch.load(weights_path, map_location='cpu')
+# load state dict to model
+model.load_state_dict(state_dict)
+model.eval()
 
 # # Set up data loaders
 # train_data = Covid('/kaggle/input/covidqu/Infection Segmentation Data/Infection Segmentation Data')
@@ -320,20 +331,7 @@ print_size_of_model(model_static_quantized)
 
 ##################
 # export quantizated model
-IMAGE_WIDTH = 256
-IMAGE_HEIGHT = 256
-weights_path = '/kaggle/input/baseline/inceptionv4.ckpt'
 
-# Paths where ONNX and OpenVINO IR models will be stored.
-onnx_path = 'quantized_model_final.onnx'
-# ir_path = 'model_final.xml'  
-
-# Load model for converting to ONNX 
-# model = Multitask_MobileV3Smal_LRASPP(MobileNetV3_Modified, SegHead, SegHead)
-state_dict = torch.load(weights_path, map_location='cpu')
-# load state dict to model
-model.load_state_dict(state_dict)
-model.eval()
 # print("Loaded PyTorch model")
 
 
@@ -344,7 +342,7 @@ with warnings.catch_warnings():
     input_names = [ "input_image" ]
     output_names = [ "class", "lung_output", 'infect_output' ]
 
-    torch.onnx.export(model, dummy_input, onnx_path, verbose=True, input_names=input_names, output_names=output_names)
+    torch.onnx.export(model_static_quantized , dummy_input, onnx_path, verbose=True, input_names=input_names, output_names=output_names)
     print(f"ONNX model exported to {onnx_path}.")
 
 #############################################
