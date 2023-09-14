@@ -583,7 +583,7 @@ invTrans = transforms.Compose([ transforms.Normalize(mean = [ 0., 0., 0. ],
                                ])
 
 # inv_tensor = invTrans(inp_tensor)
-
+time_ls=[]
 for i in range(580, 590):
     image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
     
@@ -606,6 +606,7 @@ for i in range(580, 590):
     
     image = image.unsqueeze(0).to('cpu').numpy()
     with torch.no_grad():
+        t1= time.time()
         output_class, output_seg_lungs, output_seg_infected = compiled_model_onnx(image).values()
 
     output_class = output_class.argmax(1)
@@ -613,6 +614,8 @@ for i in range(580, 590):
     output_seg_infected = (np.transpose(output_seg_infected.argmax(1), (1, 2, 0))*255).astype('uint8')
       
     _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
+    t2= time.time()-t1
+    time_ls.append(t2)
     
     fig.add_subplot(3, 3, 4)
     fig.add_subplot(3, 3, 4).set_title('Lung output')
@@ -631,3 +634,4 @@ for i in range(580, 590):
     plt.axis('off')
 
     plt.savefig('/kaggle/working/asfsaf.png')
+    print(np.mean(time_ls[1:]))
