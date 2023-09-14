@@ -588,18 +588,18 @@ for i in range(580, 590):
     image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
     
 
-    fig, axs = plt.subplots(2, 3)
+    fig, axs = plt.subplots(2, 3, figsize=(25,25))
 
     axs[0,0].imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
-    axs[0,0].set_title("Input image")
+    axs[0,0].set_title("Input image",fontsize = 12)
     axs[0,0].axis('off')
 
     axs[0,1].imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
-    axs[0,1].set_title('Lung groundtruth')
+    axs[0,1].set_title('Lung groundtruth',fontsize = 12)
     axs[0,1].axis('off')
 
     axs[0,2].imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
-    axs[0,2].set_title('Infected groundtruth')
+    axs[0,2].set_title('Infected groundtruth',fontsize = 12)
     axs[0,2].axis('off')
 
 
@@ -636,15 +636,15 @@ for i in range(580, 590):
     time_ls.append(t2)
 
     axs[1,0].imshow(output_seg_lungs,cmap='gray')
-    axs[1,0].set_title('Lung output')
+    axs[1,0].set_title('Lung output',fontsize = 12)
     axs[1,0].axis('off')
 
     axs[1,1].imshow(output_seg_infected,cmap='gray')
-    axs[1,1].set_title('Infected output')
+    axs[1,1].set_title('Infected output',fontsize = 12)
     axs[1,1].axis('off')
 
     axs[1,2].imshow(illustrate_im,cmap='gray')
-    axs[1,2].set_title('Final output')
+    axs[1,2].set_title('Final output',fontsize = 12)
     axs[1,2].axis('off')
 
     # fig.add_subplot(3, 3, 4)
