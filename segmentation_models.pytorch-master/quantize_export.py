@@ -590,10 +590,19 @@ for i in range(580, 590):
     fig = plt.figure(figsize=(20, 20))
     fig.add_subplot(3, 3, 1)
     plt.imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
+    plt.axis('off')
+    fig.add_subplot(3, 3, 1).set_title('Image')
+
     fig.add_subplot(3, 3, 2)
     plt.imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    plt.axis('off')
+    fig.add_subplot(3, 3, 1).set_title('Lung groundtruth')
+
     fig.add_subplot(3, 3, 3)
     plt.imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    plt.axis('off')
+    fig.add_subplot(3, 3, 1).set_title('Infected Lung groundtruth')
+
     
     image = image.unsqueeze(0).to('cpu').numpy()
     with torch.no_grad():
@@ -607,9 +616,18 @@ for i in range(580, 590):
     
     fig.add_subplot(3, 3, 4)
     plt.imshow(output_seg_lungs,cmap='gray')
+    plt.axis('off')
+    fig.add_subplot(3, 3, 1).set_title('Lung output')
+
+
     fig.add_subplot(3, 3, 5)
-    plt.imshow(output_seg_infected,cmap='gray')    
+    plt.imshow(output_seg_infected,cmap='gray')  
+    plt.axis('off')
+    fig.add_subplot(3, 3, 1).set_title('Infected Lung output')
+
     fig.add_subplot(3, 3, 6)
     plt.imshow(illustrate_im,cmap='gray')
     plt.axis('off')
+    fig.add_subplot(3, 3, 1).set_title('Final output')
+
     plt.savefig('/kaggle/working/asfsaf.png')
