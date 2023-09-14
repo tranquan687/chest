@@ -663,5 +663,5 @@ for i in range(580, 590):
     # plt.imshow(illustrate_im,cmap='gray')
     # plt.axis('off')
 
-    plt.savefig('/kaggle/working/asfsaf.png')
+    plt.savefig('/kaggle/working/aádfasdfsfsaf.png')
 print(np.mean(time_ls[1:]))
