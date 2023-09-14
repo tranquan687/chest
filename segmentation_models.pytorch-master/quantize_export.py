@@ -589,19 +589,19 @@ for i in range(580, 590):
     
     fig = plt.figure(figsize=(20, 20))
     fig.add_subplot(3, 3, 1)
-    plt.imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
     plt.axis('off')
     fig.add_subplot(3, 3, 1).set_title('Image')
+    plt.imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
 
     fig.add_subplot(3, 3, 2)
-    plt.imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
     plt.axis('off')
     fig.add_subplot(3, 3, 2).set_title('Lung groundtruth')
+    plt.imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
 
     fig.add_subplot(3, 3, 3)
-    plt.imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
     plt.axis('off')
     fig.add_subplot(3, 3, 3).set_title('Infected Lung groundtruth')
+    plt.imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
 
     
     image = image.unsqueeze(0).to('cpu').numpy()
@@ -615,19 +615,19 @@ for i in range(580, 590):
     _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
     
     fig.add_subplot(3, 3, 4)
-    plt.imshow(output_seg_lungs,cmap='gray')
     plt.axis('off')
     fig.add_subplot(3, 3, 4).set_title('Lung output')
+    plt.imshow(output_seg_lungs,cmap='gray')
 
 
     fig.add_subplot(3, 3, 5)
-    plt.imshow(output_seg_infected,cmap='gray')  
     plt.axis('off')
     fig.add_subplot(3, 3, 5).set_title('Infected Lung output')
+    plt.imshow(output_seg_infected,cmap='gray')  
 
     fig.add_subplot(3, 3, 6)
-    plt.imshow(illustrate_im,cmap='gray')
     plt.axis('off')
     fig.add_subplot(3, 3, 6).set_title('Final output')
+    plt.imshow(illustrate_im,cmap='gray')
 
     plt.savefig('/kaggle/working/asfsaf.png')
