@@ -587,21 +587,39 @@ time_ls=[]
 for i in range(580, 590):
     image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
     
-    fig = plt.figure(figsize=(20, 20))
-    fig.add_subplot(3, 3, 1)
-    fig.add_subplot(3, 3, 1).set_title('Image')
-    plt.imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
-    plt.axis('off')
 
-    fig.add_subplot(3, 3, 2)
-    fig.add_subplot(3, 3, 2).set_title('Lung groundtruth')
-    plt.imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
-    plt.axis('off')
+    fig, axs = plt.subplots(2, 3)
 
-    fig.add_subplot(3, 3, 3)
-    fig.add_subplot(3, 3, 3).set_title('Infected Lung groundtruth')
-    plt.imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
-    plt.axis('off')
+    axs[0,0].imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
+    axs[0,0].set_title("Input image")
+    axs[0,0].axis('off')
+
+    axs[0,1].imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    axs[0,1].set_title('Lung groundtruth')
+    axs[0,1].axis('off')
+
+    axs[0,2].imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    axs[0,2].set_title('Infected Lung groundtruth')
+    axs[0,2].axis('off')
+
+
+
+
+    # fig = plt.figure(figsize=(20, 20))
+    # fig.add_subplot(3, 3, 1)
+    # fig.add_subplot(3, 3, 1).set_title('Image')
+    # plt.imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
+    # plt.axis('off')
+
+    # fig.add_subplot(3, 3, 2)
+    # fig.add_subplot(3, 3, 2).set_title('Lung groundtruth')
+    # plt.imshow(label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    # plt.axis('off')
+
+    # fig.add_subplot(3, 3, 3)
+    # fig.add_subplot(3, 3, 3).set_title('Infected Lung groundtruth')
+    # plt.imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
+    # plt.axis('off')
 
     
     image = image.unsqueeze(0).to('cpu').numpy()
@@ -616,22 +634,34 @@ for i in range(580, 590):
     _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
     t2= time.time()-t1
     time_ls.append(t2)
-    
-    fig.add_subplot(3, 3, 4)
-    fig.add_subplot(3, 3, 4).set_title('Lung output')
-    plt.imshow(output_seg_lungs,cmap='gray')
-    plt.axis('off')
+
+    axs[1,0].imshow(output_seg_lungs,cmap='gray')
+    axs[1,0].set_title('Lung output')
+    axs[1,0].axis('off')
+
+    axs[1,1].imshow(output_seg_infected,cmap='gray')
+    axs[1,1].set_title('Infected Lung output')
+    axs[1,1].axis('off')
+
+    axs[1,2].imshow(illustrate_im,cmap='gray')
+    axs[1,2].set_title('Final output')
+    axs[1,2].axis('off')
+
+    # fig.add_subplot(3, 3, 4)
+    # fig.add_subplot(3, 3, 4).set_title('Lung output')
+    # plt.imshow(output_seg_lungs,cmap='gray')
+    # plt.axis('off')
 
 
-    fig.add_subplot(3, 3, 5)
-    fig.add_subplot(3, 3, 5).set_title('Infected Lung output')
-    plt.imshow(output_seg_infected,cmap='gray')  
-    plt.axis('off')
+    # fig.add_subplot(3, 3, 5)
+    # fig.add_subplot(3, 3, 5).set_title('Infected Lung output')
+    # plt.imshow(output_seg_infected,cmap='gray')  
+    # plt.axis('off')
 
-    fig.add_subplot(3, 3, 6)
-    fig.add_subplot(3, 3, 6).set_title('Final output')
-    plt.imshow(illustrate_im,cmap='gray')
-    plt.axis('off')
+    # fig.add_subplot(3, 3, 6)
+    # fig.add_subplot(3, 3, 6).set_title('Final output')
+    # plt.imshow(illustrate_im,cmap='gray')
+    # plt.axis('off')
 
     plt.savefig('/kaggle/working/asfsaf.png')
-    print(np.mean(time_ls[1:]))
+print(np.mean(time_ls[1:]))
