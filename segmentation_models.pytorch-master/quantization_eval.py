@@ -240,6 +240,8 @@ onnx_path = 'quantized_model_final.onnx'
 
 # Load model for converting to ONNX 
 # model = Multitask_MobileV3Smal_LRASPP(MobileNetV3_Modified, SegHead, SegHead)
+model = model.to(device)
+
 state_dict = torch.load(weights_path, map_location=device)
 # load state dict to model
 model.load_state_dict(state_dict)
