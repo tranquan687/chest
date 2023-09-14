@@ -588,7 +588,7 @@ for i in range(580, 590):
     image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
     
 
-    fig, axs = plt.subplots(2, 3, figsize=(256,256))
+    fig, axs = plt.subplots(2, 3, figsize=(64,64))
 
     axs[0,0].imshow(invTrans(image).permute(1, 2, 0), cmap='gray')
     axs[0,0].set_title("Input image",)
