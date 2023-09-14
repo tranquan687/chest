@@ -232,7 +232,7 @@ device = 'cpu'
 print('device selected: ',device)
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
-weights_path = '/kaggle/input/baseline/inceptionv4.ckpt'
+weights_path = '/kaggle/input/inceptionv4/inceptionv4_02.ckpt'
 
 # Paths where ONNX and OpenVINO IR models will be stored.
 onnx_path = 'quantized_model_final.onnx'
