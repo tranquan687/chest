@@ -320,7 +320,7 @@ for batch_idx, (inputs, labels_classification,  labels_segmentation_lungs, label
             labels_segmentation_infected = labels_segmentation_infected.to(device)
             labels_segmentation_lungs = labels_segmentation_lungs.to(device)
             
-            outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model_static_quantized(inputs)
+            outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
             
             
             outputs_classification = outputs_classification.type(torch.float32)
@@ -395,7 +395,7 @@ with torch.no_grad():
         labels_segmentation_infected = labels_segmentation_infected.to(device)
         labels_segmentation_lungs = labels_segmentation_lungs.to(device)
         
-        outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model_static_quantized(inputs)
+        outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
         
         outputs_classification = outputs_classification.argmax(1).detach().cpu().numpy()
         # print(outputs_classification)
@@ -482,7 +482,7 @@ with torch.no_grad():
         labels_segmentation_infected = labels_segmentation_infected.to(device)
         labels_segmentation_lungs = labels_segmentation_lungs.to(device)
         
-        outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model_static_quantized(inputs)
+        outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
 
         outputs_segmentation_lungs = (np.transpose(outputs_segmentation_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
         outputs_segmentation_infected = (np.transpose(outputs_segmentation_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
