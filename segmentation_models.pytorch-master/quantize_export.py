@@ -599,7 +599,7 @@ for i in range(580, 590):
     axs[0,1].axis('off')
 
     axs[0,2].imshow(label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0), cmap='gray')
-    axs[0,2].set_title('Infected Lung groundtruth')
+    axs[0,2].set_title('Infected groundtruth')
     axs[0,2].axis('off')
 
 
