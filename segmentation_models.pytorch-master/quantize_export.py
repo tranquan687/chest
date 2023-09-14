@@ -640,7 +640,7 @@ for i in range(580, 590):
     axs[1,0].axis('off')
 
     axs[1,1].imshow(output_seg_infected,cmap='gray')
-    axs[1,1].set_title('Infected Lung output')
+    axs[1,1].set_title('Infected output')
     axs[1,1].axis('off')
 
     axs[1,2].imshow(illustrate_im,cmap='gray')
