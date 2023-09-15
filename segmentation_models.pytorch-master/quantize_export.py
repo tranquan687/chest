@@ -603,7 +603,7 @@ for i in range(580, 590):
     axs[0,2].axis('off')
 
 
-    print(type(invTrans(image).permute(1, 2, 0)))
+    print(type(invTrans(image).permute(1, 2, 0)).unique())
     cv2.imwrite('/kaggle/working/Image.png',invTrans(image).permute(1, 2, 0).numpy() )
     cv2.imwrite('/kaggle/working/Lung groundtruth.png',label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0).numpy() )
     cv2.imwrite('/kaggle/working/Infected Lung groundtruth.png',label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0).numpy() )
