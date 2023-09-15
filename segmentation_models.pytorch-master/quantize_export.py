@@ -161,6 +161,7 @@ weights_path = '/kaggle/input/baseline/inceptionv4.ckpt'
 state_dict = torch.load(weights_path, map_location=device)
 
 model.load_state_dict(state_dict)
+model.to(device)
 model.eval()
 
 
