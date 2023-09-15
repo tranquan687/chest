@@ -216,7 +216,14 @@ def post_processing_inf(outputs_classification, output_lungs, output_infected):
         illustrate_im = cv2.putText(illustrate_im, f'Predicted: {outputs_classification}',(5, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0,255,0))
         return outputs_classification, output_lungs, output_infected, 0, illustrate_im
     
+import os
+if not os.path.exists('/kaggle/working/Lung/'):
+    os.makedirs('/kaggle/working/Lung/')
 
+if not os.path.exists('/kaggle/working/Infected/'):
+    os.makedirs('/kaggle/working/Infected/')
+
+    
 for i in range(len(test_data)):
     image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
     inputs = image.unsqueeze(0).to(device)
