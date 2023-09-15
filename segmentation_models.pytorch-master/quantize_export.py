@@ -232,4 +232,5 @@ for i in range(len(test_data)):
     _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
     cv2.imwrite(f'/kaggle/working/Lung/{i}.png',output_seg_lungs )
     cv2.imwrite(f'/kaggle/working/Infected/{i}.png',output_seg_infected )
+    print(i)
     # cv2.imwrite(f'/kaggle/working/illustrate_im.png',illustrate_im )
