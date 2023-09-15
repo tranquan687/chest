@@ -227,8 +227,8 @@ for i in range(len(test_data)):
     output_class, output_seg_lungs, output_seg_infected = model(inputs)
 
     output_class = output_class.argmax(1)
-    output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1), (1, 2, 0))*255).astype('uint8')
-    output_seg_infected = (np.transpose(output_seg_infected.argmax(1), (1, 2, 0))*255).astype('uint8')
+    output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
+    output_seg_infected = (np.transpose(output_seg_infected.argmax(1).detach().cpu().numpy(), (1, 2, 0))*255).astype('uint8')
     _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
     cv2.imwrite(f'/kaggle/working/Lung/{i}.png',output_seg_lungs )
     cv2.imwrite(f'/kaggle/working/Infected/{i}.png',output_seg_infected )
