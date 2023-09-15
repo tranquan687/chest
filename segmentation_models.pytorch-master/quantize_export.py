@@ -224,7 +224,7 @@ for i in range(len(test_data)):
     # labels_segmentation_infected = labels_segmentation_infected.to(device)
     # labels_segmentation_lungs = labels_segmentation_lungs.to(device)
     
-    outputs_classification, outputs_segmentation_lungs, outputs_segmentation_infected = model(inputs)
+    output_class, output_seg_lungs, output_seg_infected = model(inputs)
 
     output_class = output_class.argmax(1)
     output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1), (1, 2, 0))*255).astype('uint8')
