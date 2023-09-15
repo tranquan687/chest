@@ -584,7 +584,7 @@ invTrans = transforms.Compose([ transforms.Normalize(mean = [ 0., 0., 0. ],
 
 # inv_tensor = invTrans(inp_tensor)
 time_ls=[]
-for i in range(580, 590):
+for i in range(589, 590):
     image, label_class, label_seg_lungs, label_seg_infected = test_data[i]
     
 
