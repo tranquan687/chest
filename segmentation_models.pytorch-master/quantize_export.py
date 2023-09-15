@@ -232,7 +232,7 @@ device = 'cpu'
 print('device selected: ',device)
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
-weights_path = '/kaggle/input/inceptionv4/inceptionv4_02.ckpt'
+weights_path = '/kaggle/input/baseline/inceptionv4.ckpt'
 
 # Paths where ONNX and OpenVINO IR models will be stored.
 onnx_path = 'quantized_model_final.onnx'
@@ -604,7 +604,11 @@ for i in range(580, 590):
 
 
 
+    cv2.imwrite('/kaggle/working/Image.png',invTrans(image).permute(1, 2, 0) )
+    cv2.imwrite('/kaggle/working/Lung groundtruth.png',label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0) )
+    cv2.imwrite('/kaggle/working/Infected Lung groundtruth',label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0) )
 
+    # cv2.imwrite('Lung output.png',output_seg_lungs )
     # fig = plt.figure(figsize=(20, 20))
     # fig.add_subplot(3, 3, 1)
     # fig.add_subplot(3, 3, 1).set_title('Image')
@@ -630,22 +634,33 @@ for i in range(580, 590):
     output_class = output_class.argmax(1)
     output_seg_lungs = (np.transpose(output_seg_lungs.argmax(1), (1, 2, 0))*255).astype('uint8')
     output_seg_infected = (np.transpose(output_seg_infected.argmax(1), (1, 2, 0))*255).astype('uint8')
-      
+
     _, output_seg_lungs, output_seg_infected, infected_ratio, illustrate_im = post_processing_inf(output_class, output_seg_lungs, output_seg_infected)
-    t2= time.time()-t1
-    time_ls.append(t2)
+    
+    cv2.imwrite('/kaggle/working/Lung output.png',output_seg_lungs )
+    cv2.imwrite('/kaggle/working/Infected output.png',output_seg_infected )
+    cv2.imwrite('/kaggle/working/illustrate_im.png',illustrate_im )
 
-    axs[1,0].imshow(output_seg_lungs,cmap='gray')
-    axs[1,0].set_title('Lung output',)
-    axs[1,0].axis('off')
 
-    axs[1,1].imshow(output_seg_infected,cmap='gray')
-    axs[1,1].set_title('Infected output',)
-    axs[1,1].axis('off')
 
-    axs[1,2].imshow(illustrate_im,cmap='gray')
-    axs[1,2].set_title('Final output',)
-    axs[1,2].axis('off')
+
+
+
+
+    # t2= time.time()-t1
+    # time_ls.append(t2)
+
+    # axs[1,0].imshow(output_seg_lungs,cmap='gray')
+    # axs[1,0].set_title('Lung output',)
+    # axs[1,0].axis('off')
+
+    # axs[1,1].imshow(output_seg_infected,cmap='gray')
+    # axs[1,1].set_title('Infected output',)
+    # axs[1,1].axis('off')
+
+    # axs[1,2].imshow(illustrate_im,cmap='gray')
+    # axs[1,2].set_title('Final output',)
+    # axs[1,2].axis('off')
 
     # fig.add_subplot(3, 3, 4)
     # fig.add_subplot(3, 3, 4).set_title('Lung output')
@@ -663,5 +678,5 @@ for i in range(580, 590):
     # plt.imshow(illustrate_im,cmap='gray')
     # plt.axis('off')
 
-    plt.savefig('/kaggle/working/aádfasdfsfsaf.png')
-print(np.mean(time_ls[1:]))
+#     plt.savefig('/kaggle/working/aádfasdfsfsaf.png')
+# print(np.mean(time_ls[1:]))
