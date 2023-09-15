@@ -606,7 +606,7 @@ for i in range(580, 590):
     print(type(invTrans(image).permute(1, 2, 0)))
     cv2.imwrite('/kaggle/working/Image.png',invTrans(image).permute(1, 2, 0).numpy() )
     cv2.imwrite('/kaggle/working/Lung groundtruth.png',label_seg_lungs.argmax(0, keepdim=True).permute(1, 2, 0).numpy() )
-    cv2.imwrite('/kaggle/working/Infected Lung groundtruth',label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0).numpy() )
+    cv2.imwrite('/kaggle/working/Infected Lung groundtruth.png',label_seg_infected.argmax(0, keepdim=True).permute(1, 2, 0).numpy() )
 
     # cv2.imwrite('Lung output.png',output_seg_lungs )
     # fig = plt.figure(figsize=(20, 20))
